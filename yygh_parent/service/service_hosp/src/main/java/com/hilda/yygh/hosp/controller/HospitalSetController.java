@@ -35,9 +35,17 @@ public class HospitalSetController {
     }
 
     @ApiOperation("分页查询 全部 医院设置")
-    @GetMapping("/{pageNum}/{limit}")
-    public R getAllInPages(@PathVariable("pageNum") Long pageNum, @PathVariable("limit") Long limit) {
-        Page<HospitalSet> page = new Page<>(pageNum, limit);
+    @GetMapping("/{current}/{size}")
+    public R getAllInPages(@PathVariable("current") Long current, @PathVariable("size") Long size) {
+        //对current和size进行判断
+        if (current == null || current == 0) {
+            current = 1L;
+        }
+        if (size == null || size == 0) {
+            size = 10L;
+        }
+
+        Page<HospitalSet> page = new Page<>(current, size);
         hospitalSetService.page(page, null);
 
         List<HospitalSet> rows = page.getRecords();
@@ -49,6 +57,14 @@ public class HospitalSetController {
     @ApiOperation("分页 条件查询 医院设置")
     @PostMapping("/{current}/{size}")
     public R getByConditionsInPages(@PathVariable("current") Long current, @PathVariable("size") Long size, @RequestBody HospitalSetQueryVo hospitalSetQueryVo) {
+        //对current和size进行判断
+        if (current == null || current == 0) {
+            current = 1L;
+        }
+        if (size == null || size == 0) {
+            size = 10L;
+        }
+
         Page<HospitalSet> page = new Page<>(current, size);
         QueryWrapper<HospitalSet> queryWrapper = new QueryWrapper<>();
 

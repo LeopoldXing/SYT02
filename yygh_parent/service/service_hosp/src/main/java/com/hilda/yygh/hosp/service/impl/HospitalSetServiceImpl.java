@@ -7,7 +7,6 @@ import com.hilda.yygh.model.hosp.HospitalSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,27 +43,21 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
 
     @Override
     public Boolean deleteHospitalSetByIdList(List<Long> idList) {
-        boolean res = true;
-
-        //判断 id列表 有效性
+        //判断 id列表 是否为空
         if (idList == null) {
-            return false;
+            throw new RuntimeException("给定id列表为空");
         }
 
-        //遍历 id列表
-        for (Long id : idList) {
-            if (!deleteHospitalSetById(id)) res = false;
-        }
-
-        return res;
+        return hospitalSetMapper.deleteBatchIds(idList) > -1;
     }
 
     @Override
     public Boolean addHospitalSet(HospitalSet hospitalSet) {
         //对传入的 医院设置 进行有效性判断
 
-        hospitalSet.setCreateTime(new Date());
-        hospitalSet.setUpdateTime(new Date());
+        //设置医院设置的状态     1 正常    0 锁定
+        hospitalSet.setStatus(1);
+
         int num = hospitalSetMapper.insert(hospitalSet);
 
         return num > 0;
@@ -74,11 +67,15 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
     public Boolean editHospitalSet(HospitalSet hospitalSet) {
         Boolean res = false;
 
+        if (hospitalSet == null) {
+            throw new RuntimeException("医院设置对象为空");
+        }
+
         //判断给定 医院设置是否存在
         Long id = hospitalSet.getId();
-        if (id == null) {
+        if (id == null || id == 0) {
             //给定医院设置错误
-            return false;
+            throw new RuntimeException("医院设置的id为空");
         } else {
             HospitalSet tempHospitalSet = getHospitalSetById(id);
             if (tempHospitalSet == null) {
@@ -86,7 +83,6 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
                 res = addHospitalSet(hospitalSet);
             } else {
                 //给定 医院设置 存在
-                hospitalSet.setUpdateTime(new Date());
                 hospitalSetMapper.updateById(hospitalSet);
                 res = true;
             }
@@ -97,11 +93,14 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
 
     @Override
     public Boolean lockHospitalSet(Long id, Integer status) {
+        //判断给定状态码
+        if(status == null || status > 1 || status < 0) throw new RuntimeException("给定状态码无效");
+
         //判断给定id 有效性
         HospitalSet hospitalSet = getHospitalSetById(id);
         if (hospitalSet == null) {
             //医院设置 不存在
-            return false;
+            throw new RuntimeException("医院设置对象为空");
         } else {
             //医院设置 存在
             hospitalSet.setStatus(status);

@@ -79,12 +79,14 @@
                 <version>${swagger.version}</version>
             </dependency>
 
+            <!-- 用户身份令牌 -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jwt.version}</version>
             </dependency>
 
+            <!-- 使用java代码发送请求 -->
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -97,6 +99,7 @@
                 <version>${fastjson.version}</version>
             </dependency>
 
+            <!-- 使用java代码操作excel代码 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
@@ -115,7 +118,7 @@
                 <version>${oss.version}</version>
             </dependency>
 
-            <!--日期时间工具-->
+            <!-- 日期时间工具 -->
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
