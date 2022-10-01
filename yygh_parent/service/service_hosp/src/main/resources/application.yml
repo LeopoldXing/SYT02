@@ -28,7 +28,6 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-
 # mybatis日志
 mybatis-plus:
   configuration:

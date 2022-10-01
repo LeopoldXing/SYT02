@@ -21,10 +21,10 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public R error(ArithmeticException e){
         e.printStackTrace();
-        return R.error().message("出现了ArithmeticException异常");
+        return R.error().message(e.getMessage());
     }
 
-
+    //自定义异常处理
     @ExceptionHandler(YyghException.class)
     @ResponseBody
     public R error(YyghException e){
