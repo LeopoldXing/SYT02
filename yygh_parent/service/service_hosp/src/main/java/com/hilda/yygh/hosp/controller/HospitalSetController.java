@@ -9,6 +9,7 @@ import com.hilda.yygh.vo.hosp.HospitalSetQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class HospitalSetController {
     @Autowired
     private HospitalSetService hospitalSetService;
 
-    @ApiOperation("查询所有 医院设置")
+    @ApiOperation("查询全部 医院设置")
     @GetMapping("/getAll")
     public R getAllHospitalSet() {
         List<HospitalSet> hospitalSetList = hospitalSetService.getAllHospitalSets();
@@ -34,7 +35,7 @@ public class HospitalSetController {
         }
     }
 
-    @ApiOperation("分页查询 全部 医院设置")
+    @ApiOperation("分页 查询全部 医院设置")
     @GetMapping("/{current}/{size}")
     public R getAllInPages(@PathVariable("current") Long current, @PathVariable("size") Long size) {
         //对current和size进行判断
