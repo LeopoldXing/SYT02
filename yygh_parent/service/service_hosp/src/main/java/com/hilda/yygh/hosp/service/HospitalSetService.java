@@ -17,7 +17,9 @@ public interface HospitalSetService extends IService<HospitalSet> {
 
     Boolean deleteHospitalSetByIdList(List<Long> idList);
 
-    Boolean editHospitalSet(HospitalSet hospitalSet);
+    Boolean updateHospitalSet(HospitalSet hospitalSet);
+
+    Boolean saveHospitalSet(HospitalSet hospitalSet);
 
     Boolean lockHospitalSet(Long id, Integer status);
 }

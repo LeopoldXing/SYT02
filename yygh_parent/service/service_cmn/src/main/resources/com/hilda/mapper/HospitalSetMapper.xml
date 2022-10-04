@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace写xml对应的接口-->
+<mapper namespace="com.hilda.yygh.cmn.mapper.DictMapper">
+    <!--自定义sql语句-->
+
+    <select id="getChildList" parameterType="long" resultType="dict">
+        SELECT * FROM `dict` WHERE `is_deleted` = 0 AND `parent_id` = #{id}
+    </select>
+
+</mapper>

@@ -64,7 +64,7 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
     }
 
     @Override
-    public Boolean editHospitalSet(HospitalSet hospitalSet) {
+    public Boolean updateHospitalSet(HospitalSet hospitalSet) {
         Boolean res = false;
 
         if (hospitalSet == null) {
@@ -92,6 +92,26 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
     }
 
     @Override
+    public Boolean saveHospitalSet(HospitalSet hospitalSet) {
+        //判断 医院设置是否为空
+        if (hospitalSet == null) {
+            throw new RuntimeException("医院设置对象为空");
+        }
+
+        //获取医院设置id
+        Long id = hospitalSet.getId();
+
+        //根据id 判断 医院设置 是否存在
+        if (id == null || id == 0) {
+            //医院设置 不存在，进行插入操作
+            return addHospitalSet(hospitalSet);
+        } else if (getHospitalSetById(id) != null) {
+            //医院设置 存在，进行更新操作
+            return updateHospitalSet(hospitalSet);
+        } else return false;
+    }
+
+    @Override
     public Boolean lockHospitalSet(Long id, Integer status) {
         //判断给定状态码
         if(status == null || status > 1 || status < 0) throw new RuntimeException("给定状态码无效");
@@ -104,7 +124,7 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
         } else {
             //医院设置 存在
             hospitalSet.setStatus(status);
-            return editHospitalSet(hospitalSet);
+            return updateHospitalSet(hospitalSet);
         }
     }
 }

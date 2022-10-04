@@ -9,7 +9,6 @@ import com.hilda.yygh.vo.hosp.HospitalSetQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,15 +114,22 @@ public class HospitalSetController {
     @ApiOperation("根据id 批量删除 医院设置")
     @DeleteMapping("/deleteBatch")
     public R deleteBathByIdList(@RequestBody List<Long> idList) {
+
         return hospitalSetService.deleteHospitalSetByIdList(idList) ? R.ok() : R.error();
     }
 
     @ApiOperation("根据id 修改 医院设置")
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public R editHospitalSetById(@RequestBody HospitalSet hospitalSet) {
-        Boolean res = hospitalSetService.editHospitalSet(hospitalSet);
+        Boolean res = hospitalSetService.updateHospitalSet(hospitalSet);
 
         return res ? R.ok() : R.error();
+    }
+
+    @ApiOperation("增加/修改 医院设置")
+    @PostMapping("/saveHospitalSet")
+    public R saveHospitalSet(@RequestBody HospitalSet hospitalSet) {
+        return hospitalSetService.saveHospitalSet(hospitalSet) ? R.ok() : R.error();
     }
 
     @ApiOperation("根据id 锁定/解锁 医院设置")
