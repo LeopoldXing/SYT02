@@ -25,7 +25,6 @@ public class DictController {
     @ApiOperation("导出数据字典")
     @GetMapping("/exportDictData")
     public R exportDictData() {
-
         return R.ok();
     }
 
