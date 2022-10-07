@@ -3,14 +3,18 @@ package com.hilda.yygh.cmn.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hilda.yygh.cmn.listener.DictListener;
 import com.hilda.yygh.cmn.mapper.DictMapper;
 import com.hilda.yygh.cmn.service.DictService;
 import com.hilda.yygh.model.cmn.Dict;
+import com.hilda.yygh.vo.cmn.DictEeVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,8 +35,28 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     }
 
     @Override
-    public void exportDictData(HttpServletResponse response) {
+    public void exportDictData(OutputStream outputStream, String fileName) {
+        //准备数据字典数据
+        List<Dict> dictList = dictMapper.selectList(null);
+        List<DictEeVo> dictEeVoList = new ArrayList<>(dictList.size());
 
+        //将dict列表 转换为 dictEeVo列表
+        dictList.forEach(dict -> {
+            DictEeVo dictEeVo = new DictEeVo();
+            BeanUtils.copyProperties(dict, dictEeVo);
+            dictEeVoList.add(dictEeVo);
+        });
+
+        //将数据写入Excel文件
+        EasyExcel.write(outputStream, DictEeVo.class).sheet(fileName).doWrite(dictEeVoList);
+    }
+
+    @Override
+    public void importDictData(InputStream inputStream) {
+        EasyExcel
+                .read(inputStream, DictEeVo.class, new DictListener(dictMapper))
+                .sheet(0)
+                .doRead();
     }
 
     private Boolean hasChild(Long id) {
