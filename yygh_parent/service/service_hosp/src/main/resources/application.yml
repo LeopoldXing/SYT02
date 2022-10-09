@@ -28,6 +28,11 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  #mongodb
+  data:
+    mongodb:
+      uri: mongodb://192.168.17.131:27017/hospital
+
 # mybatis日志
 mybatis-plus:
   configuration:

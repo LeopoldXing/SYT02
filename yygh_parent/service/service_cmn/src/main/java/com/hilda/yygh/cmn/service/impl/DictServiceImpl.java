@@ -10,7 +10,10 @@ import com.hilda.yygh.model.cmn.Dict;
 import com.hilda.yygh.vo.cmn.DictEeVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +26,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Autowired
     private DictMapper dictMapper;
 
+    @Cacheable(cacheNames = "dict", key = "'value_' + #id")
     @Override
     public List<Dict> getChildList(Long id) {
         QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
@@ -51,6 +55,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         EasyExcel.write(outputStream, DictEeVo.class).sheet(fileName).doWrite(dictEeVoList);
     }
 
+    @CacheEvict(value = "dict",allEntries = true)
     @Override
     public void importDictData(InputStream inputStream) {
         EasyExcel

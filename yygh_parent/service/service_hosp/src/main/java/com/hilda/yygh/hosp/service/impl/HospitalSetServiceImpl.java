@@ -1,6 +1,7 @@
 package com.hilda.yygh.hosp.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hilda.yygh.hosp.mapper.HospitalRepository;
 import com.hilda.yygh.hosp.mapper.HospitalSetMapper;
 import com.hilda.yygh.hosp.service.HospitalSetService;
 import com.hilda.yygh.model.hosp.HospitalSet;
@@ -14,6 +15,9 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
 
     @Autowired
     private HospitalSetMapper hospitalSetMapper;
+
+    @Autowired
+    private HospitalRepository hospitalRepository;
 
     @Override
     public List<HospitalSet> getAllHospitalSets() {
