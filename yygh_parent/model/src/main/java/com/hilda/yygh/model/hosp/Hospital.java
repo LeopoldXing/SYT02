@@ -66,5 +66,22 @@ public class Hospital extends BaseMongoEntity {
 		this.bookingRule = JSONObject.parseObject(bookingRule, BookingRule.class);
 	}
 
+	public Hospital() {
+	}
+
+	public Hospital(String hoscode, String hosname, String hostype, String provinceCode, String cityCode, String districtCode, String address, String logoData, String intro, String route, Integer status, BookingRule bookingRule) {
+		this.hoscode = hoscode;
+		this.hosname = hosname;
+		this.hostype = hostype;
+		this.provinceCode = provinceCode;
+		this.cityCode = cityCode;
+		this.districtCode = districtCode;
+		this.address = address;
+		this.logoData = logoData;
+		this.intro = intro;
+		this.route = route;
+		this.status = status;
+		this.bookingRule = bookingRule;
+	}
 }
 

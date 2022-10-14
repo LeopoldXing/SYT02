@@ -22,4 +22,6 @@ public interface HospitalSetService extends IService<HospitalSet> {
     Boolean saveHospitalSet(HospitalSet hospitalSet);
 
     Boolean lockHospitalSet(Long id, Integer status);
+
+    String getSignKey(String hoscode);
 }

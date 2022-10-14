@@ -52,6 +52,18 @@ public class DictController {
         return R.ok();
     }
 
+    @ApiOperation("根据value值和父节点编号查询字典名称")
+    @GetMapping(value = "/getName/{parentDictCode}/{value}")
+    public String getNameByParentDictCodeAndValue(@PathVariable("parentDictCode") String parentDictCode, @PathVariable("value") Long value) {
+        return dictService.getNameByParentDictCodeAndValue(parentDictCode, value);
+    }
+
+    @ApiOperation("根据value值获取字典内容")
+    @GetMapping(value = "/getName/{value}")
+    public String getNameByValue (@PathVariable("value") Long value) {
+        return dictService.getNameByValue(value);
+    }
+
     //处理导出数据字典时的响应
     private String handleResponseForDownloadingExcel(HttpServletResponse response) {
         //指定响应内容的格式

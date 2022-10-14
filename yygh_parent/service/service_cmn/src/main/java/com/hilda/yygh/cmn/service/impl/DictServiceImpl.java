@@ -64,6 +64,18 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .doRead();
     }
 
+    @Override
+    public String getNameByParentDictCodeAndValue(String parentDictCode, Long value) {
+        Dict parentDict = dictMapper.selectOne(new QueryWrapper<Dict>().eq("dict_code", parentDictCode));
+        Dict dict = dictMapper.selectOne(new QueryWrapper<Dict>().eq("value", value).eq("parent_id", parentDict.getId()));
+        return dict.getName();
+    }
+
+    @Override
+    public String getNameByValue(Long value) {
+        return dictMapper.selectOne(new QueryWrapper<Dict>().eq("value", value)).getName();
+    }
+
     private Boolean hasChild(Long id) {
         QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("parent_id", id);

@@ -1,4 +1,4 @@
-package com.hilda.yygh.hosp.mapper;
+package com.hilda.yygh.hosp.repository;
 
 import com.hilda.yygh.model.hosp.Hospital;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface HospitalRepository extends MongoRepository<Hospital, String> {
 
     Hospital getHospitalByHoscode(String hoscode);
-
-    Hospital save(Hospital hospital);
 
 }

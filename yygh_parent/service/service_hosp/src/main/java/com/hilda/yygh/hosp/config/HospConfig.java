@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "com.hilda")
 @MapperScan("com.hilda.yygh.hosp.mapper")
+@ComponentScan(basePackages = "com.hilda")
 public class HospConfig {
 
     //分页拦截器

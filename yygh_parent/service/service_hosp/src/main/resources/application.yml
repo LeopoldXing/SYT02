@@ -31,7 +31,13 @@ spring:
   #mongodb
   data:
     mongodb:
-      uri: mongodb://192.168.17.131:27017/hospital
+      uri: mongodb://192.168.50.133:27017/hospital
+      auto-index-creation: false
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://192.168.50.133:8848
 
 # mybatis日志
 mybatis-plus:

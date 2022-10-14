@@ -15,4 +15,7 @@ public interface DictService extends IService<Dict> {
 
     void importDictData(InputStream inputStream);
 
+    String getNameByParentDictCodeAndValue(String parentDictCode, Long value);
+
+    String getNameByValue(Long value);
 }

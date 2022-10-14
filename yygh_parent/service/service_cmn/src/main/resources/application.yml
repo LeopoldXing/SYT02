@@ -5,7 +5,7 @@ spring:
   cache:
     type: redis
   application:
-    name: service_cmn
+    name: service-cmn
   profiles:
     active: dev
   datasource:
@@ -21,7 +21,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   redis:
-    host: localhost
+    host: 192.168.50.133
     port: 6379
     database: 0
     lettuce:
@@ -30,6 +30,10 @@ spring:
         max-wait: -1
         max-idle: 5
         min-idle: 0
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://192.168.50.133:8848
 
 mybatis-plus:
   configuration:
