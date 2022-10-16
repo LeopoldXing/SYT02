@@ -18,4 +18,6 @@ public interface DictService extends IService<Dict> {
     String getNameByParentDictCodeAndValue(String parentDictCode, Long value);
 
     String getNameByValue(Long value);
+
+    List<Dict> getChildListByDictCode(String parentCode);
 }

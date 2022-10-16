@@ -1,0 +1,27 @@
+# 服务端口
+server:
+  port: 8000
+
+spring:
+  application:
+    # 服务名
+    name: service-gateway
+  cloud:
+    # nacos服务注册
+    nacos:
+      discovery:
+        server-addr: http://192.168.50.133:8848
+    # 使用服务发现路由
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: service-hosp
+          uri: lb://service-hosp
+          predicates:
+            - Path=/*/hosp/**, /*/login/**, /*/info/**
+        - id: service-cmn
+          uri: lb://service-cmn
+          predicates:
+            - Path=/*/cmn/**

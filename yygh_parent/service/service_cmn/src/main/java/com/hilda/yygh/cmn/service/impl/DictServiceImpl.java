@@ -76,6 +76,11 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         return dictMapper.selectOne(new QueryWrapper<Dict>().eq("value", value)).getName();
     }
 
+    @Override
+    public List<Dict> getChildListByDictCode(String parentCode) {
+        return dictMapper.selectList(new QueryWrapper<Dict>().eq("dict_code", parentCode));
+    }
+
     private Boolean hasChild(Long id) {
         QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("parent_id", id);

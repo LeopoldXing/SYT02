@@ -7,6 +7,7 @@ import com.hilda.yygh.hosp.repository.HospitalRepository;
 import com.hilda.yygh.hosp.service.HospitalService;
 import com.hilda.yygh.model.hosp.Hospital;
 import com.hilda.yygh.vo.hosp.HospitalQueryVo;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HospitalServiceImpl implements HospitalService {
@@ -52,22 +54,26 @@ public class HospitalServiceImpl implements HospitalService {
         //将查询结果中的字典编号改为字典名称
         List<Hospital> content = hospitalPage.getContent();
         content.parallelStream().forEach(singleHospitalPage -> {
-            String hostype = singleHospitalPage.getHostype();
-
-            String cityCode = singleHospitalPage.getCityCode();
-            String districtCode = singleHospitalPage.getDistrictCode();
-            String provinceCode = singleHospitalPage.getProvinceCode();
-
-            String cityName = dictFeignClient.getNameByValue(Long.parseLong(cityCode));
-            String districtName = dictFeignClient.getNameByValue(Long.parseLong(districtCode));
-            String provinceName = dictFeignClient.getNameByValue(Long.parseLong(provinceCode));
-            String level = dictFeignClient.getNameByParentDictCodeAndValue(DictEnum.HOSTYPE.getDictCode(), Long.parseLong(hostype));
-
-            singleHospitalPage.getParam().put("hostypeString", level);
-            singleHospitalPage.getParam().put("fullAddress", provinceName + cityName + districtName + singleHospitalPage.getAddress());
+            packHospital(singleHospitalPage);
         });
 
         return hospitalPage;
+    }
+
+    public void packHospital(Hospital hospital) {
+        String hostype = hospital.getHostype();
+
+        String cityCode = hospital.getCityCode();
+        String districtCode = hospital.getDistrictCode();
+        String provinceCode = hospital.getProvinceCode();
+
+        String cityName = dictFeignClient.getNameByValue(Long.parseLong(cityCode));
+        String districtName = dictFeignClient.getNameByValue(Long.parseLong(districtCode));
+        String provinceName = dictFeignClient.getNameByValue(Long.parseLong(provinceCode));
+        String level = dictFeignClient.getNameByParentDictCodeAndValue(DictEnum.HOSTYPE.getDictCode(), Long.parseLong(hostype));
+
+        hospital.getParam().put("hostypeString", level);
+        hospital.getParam().put("fullAddress", provinceName + cityName + districtName + hospital.getAddress());
     }
 
     @Override
@@ -94,6 +100,37 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         return hospitalRepository.save(hospital) != null;
+    }
+
+    @Override
+    public Boolean updateStatus(String id, Integer status) {
+        //验证 id 和 status
+        if (id == null || id.length() == 0) throw new YyghException(201, "医院id为空");
+        if (status == null || (status != 0 && status != 1)) throw new YyghException(201, "医院状态码不正确");
+
+        //根据id查询医院
+        Optional<Hospital> optionalHospital = hospitalRepository.findById(id);
+        Hospital hospital = optionalHospital.orElse(null);
+        if (hospital == null) throw new YyghException(201, "根据指定id未找到医院");
+
+        //更改医院状态
+        hospital.setStatus(status);
+        hospital.setUpdateTime(new Date());
+
+        //更新医院
+        hospitalRepository.save(hospital);
+
+        return true;
+    }
+
+    @Override
+    public Hospital getHospitalById(String id) {
+        //对医院id进行验证
+        if (id == null || id.length() == 0) throw new YyghException(201, "医院id为空");
+
+        Optional<Hospital> optionalHospital = hospitalRepository.findById(id);
+
+        return optionalHospital.orElse(null);
     }
 
 }

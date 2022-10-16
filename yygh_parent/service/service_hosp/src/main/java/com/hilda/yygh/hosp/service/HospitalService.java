@@ -12,4 +12,9 @@ public interface HospitalService {
 
     Boolean saveHospital(Hospital hospital);
 
+    Boolean updateStatus(String id, Integer status);
+
+    Hospital getHospitalById(String id);
+
+    void packHospital(Hospital hospital);
 }

@@ -4,7 +4,6 @@ import com.hilda.common.result.R;
 import com.hilda.yygh.model.acl.User;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminController {

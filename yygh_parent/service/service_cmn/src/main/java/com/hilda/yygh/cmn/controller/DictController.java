@@ -15,7 +15,6 @@ import java.net.URLEncoder;
 
 @Api("数据字典接口")
 @RestController
-@CrossOrigin
 @RequestMapping("/admin/cmn/dict")
 public class DictController {
 
@@ -26,6 +25,12 @@ public class DictController {
     @GetMapping("/getChildList/{id}")
     public R getChildList(@PathVariable("id") Long id) {
         return R.ok().data("list", dictService.getChildList(id));
+    }
+
+    @ApiOperation("根据给定 父节点编号 获取 子节点列表")
+    @GetMapping("/findByDictCode/{dictCode}")
+    public R getByDictCode(@PathVariable String dictCode) {
+        return R.ok().data("list", dictService.getChildListByDictCode(dictCode));
     }
 
     @ApiOperation("导出数据字典")

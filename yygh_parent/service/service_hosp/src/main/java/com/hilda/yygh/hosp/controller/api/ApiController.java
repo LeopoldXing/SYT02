@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.hilda.common.exception.YyghException;
 import com.hilda.common.result.Result;
 import com.hilda.common.utils.HttpRequestHelper;
+import com.hilda.common.utils.MD5;
 import com.hilda.yygh.hosp.service.DepartmentService;
 import com.hilda.yygh.hosp.service.HospitalService;
+import com.hilda.yygh.hosp.service.HospitalSetService;
 import com.hilda.yygh.hosp.service.ScheduleService;
 import com.hilda.yygh.model.hosp.Department;
 import com.hilda.yygh.model.hosp.Hospital;
@@ -16,7 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/hosp")
 public class ApiController {
+
+    @Autowired
+    private HospitalSetService hospitalSetService;
 
     @Autowired
     private HospitalService hospitalService;
@@ -72,12 +76,12 @@ public class ApiController {
         }
 
         //2 根据传递过来医院编码，查询数据库，查询签名（数据库中是未加密的）
-//        String unencryptedSignKey = hospitalSetService.getSignKey(hoscode);
+        String unencryptedSignKey = hospitalSetService.getSignKey(hoscode);
 
         //3 把数据库查询签名进行MD5加密，并进行比对
-        /*if (!encryptedSign.equals(MD5.encrypt(unencryptedSignKey))) {
+        if (!encryptedSign.equalsIgnoreCase(MD5.encrypt(unencryptedSignKey))) {
             throw new YyghException(201,"签名校验失败");
-        }*/
+        }
 
         //传输过程中“+”转换为了“ ”，因此我们要转换回来
         String logoData = String.valueOf(map.get("logoData"));
