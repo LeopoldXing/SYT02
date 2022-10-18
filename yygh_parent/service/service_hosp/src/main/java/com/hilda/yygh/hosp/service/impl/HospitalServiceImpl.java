@@ -7,7 +7,6 @@ import com.hilda.yygh.hosp.repository.HospitalRepository;
 import com.hilda.yygh.hosp.service.HospitalService;
 import com.hilda.yygh.model.hosp.Hospital;
 import com.hilda.yygh.vo.hosp.HospitalQueryVo;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -77,10 +77,21 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
+    public List<Hospital> getHospitalByHosname(String hosname) {
+        if (hosname == null) throw new YyghException(201, "医院名称为空");
+
+        List<Hospital> hospital = hospitalRepository.getHospitalByHosnameLike(hosname);
+        hospital.parallelStream().forEach(this::packHospital);
+        return hospital;
+    }
+
+    @Override
     public Hospital getHospitalByHoscode(String hoscode) {
         if (hoscode == null || hoscode.length() == 0) throw new YyghException(20001, "医院编号为空");
 
-        return hospitalRepository.getHospitalByHoscode(hoscode);
+        Hospital hospital = hospitalRepository.getHospitalByHoscode(hoscode);
+        packHospital(hospital);
+        return hospital;
     }
 
     public Boolean saveHospital(Hospital hospital) {

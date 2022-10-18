@@ -4,6 +4,9 @@ import com.hilda.yygh.model.hosp.Hospital;
 import com.hilda.yygh.vo.hosp.HospitalQueryVo;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+import java.util.Map;
+
 public interface HospitalService {
 
     Page<Hospital> getHospitalByConditionsInPages(Integer current, Integer size, HospitalQueryVo hospitalQueryVo);
@@ -17,4 +20,7 @@ public interface HospitalService {
     Hospital getHospitalById(String id);
 
     void packHospital(Hospital hospital);
+
+    List<Hospital> getHospitalByHosname(String hosname);
+
 }
