@@ -125,7 +125,18 @@ export default {
       })
     },
     schedule(depcode) {
-      window.location.href = '/hospital/schedule?hoscode=' + this.hoscode + "&depcode="+ depcode
+
+        // 判断用户是否已经登录
+        let token = cookie.get("token")
+        
+        if(!token) {
+            // 如果没有登录则跳转到登录页
+
+            console.log("用户没有登录") 
+        } else {
+            console.log("token = " + token)
+        }
+        window.location.href = '/hospital/schedule?hoscode=' + this.hoscode + "&depcode="+ depcode
     }
   }
 }

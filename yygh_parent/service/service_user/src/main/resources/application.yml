@@ -31,3 +31,8 @@ mybatis-plus:
     db-config:
       logic-delete-value: 1
       logic-not-delete-value: 0
+
+wx.open:
+  app_id: wxed9954c01bb89b47
+  app_secret: a7482517235173ddb4083788de60b90e
+  redirect_url: http://localhost:8160/api/user/wx/callback

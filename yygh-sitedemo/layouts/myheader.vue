@@ -147,6 +147,8 @@ import userInfoApi from "@/api/yygh/userinfo";
 import smsApi from "@/api/yygh/msm";
 import hospitalApi from "@/api/yygh/hospital";
 
+import weixinApi from '@/api/yygh/wx'
+
 const defaultDialogAtrr = {
   showLoginType: "phone", // 控制手机登录与微信登录切换
 
@@ -178,6 +180,29 @@ export default {
       name: "", // 用户登录显示的名称
     };
   },
+
+  mounted() {
+    // 注册全局登录事件对象，在首页选中某个医院时触发该事件
+    window.loginEvent = new Vue();
+    loginEvent.$on('loginDialogEvent', function () {
+        document.getElementById("loginDialog").click();
+    })
+    
+    
+    
+    //初始化微信js
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = 'https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
+    document.body.appendChild(script)
+    
+
+    // 微信登录回调处理
+    let self = this;
+    window["loginCallback"] = (name,token, openid) => {
+        self.loginCallback(name, token, openid);
+    }
+},
 
   created() {
     this.showInfo();
