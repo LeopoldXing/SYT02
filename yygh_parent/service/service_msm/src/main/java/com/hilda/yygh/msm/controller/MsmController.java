@@ -39,7 +39,7 @@ public class MsmController {
         code = generateCode();
         if (msmService.send(phone, code)) {
             // 发送成功
-            redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(phone, code, 24, TimeUnit.HOURS);
             return R.ok();
         } else {
             // 发送失败

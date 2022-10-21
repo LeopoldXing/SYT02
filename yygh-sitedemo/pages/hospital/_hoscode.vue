@@ -93,7 +93,8 @@
 <script>
 import '~/assets/css/hospital_personal.css'
 import '~/assets/css/hospital.css'
-
+import userInfoApi from '@/api/yygh/userinfo'
+import cookie from 'js-cookie'
 import hospitalApi from '@/api/yygh/hospital'
 
 export default {
@@ -125,19 +126,26 @@ export default {
       })
     },
     schedule(depcode) {
-
-        // 判断用户是否已经登录
-        let token = cookie.get("token")
-        
-        if(!token) {
-            // 如果没有登录则跳转到登录页
-
-            console.log("用户没有登录") 
-        } else {
-            console.log("token = " + token)
-        }
-        window.location.href = '/hospital/schedule?hoscode=' + this.hoscode + "&depcode="+ depcode
+    // 登录判断
+    let token = cookie.get('token')
+    if (!token) {
+        // myheader中定义的自定义事件，用来打开登录弹出框
+        loginEvent.$emit('loginDialogEvent')
+        return
     }
+
+    //判断认证
+    userInfoApi.getUserInfo().then(response => {
+        let authStatus = response.data.userInfo.authStatus
+        // 状态为2认证通过
+        if (!authStatus || authStatus != 2) {
+            window.location.href = '/user' //跳转到认证页面
+            return
+        }
+    })
+	//authStatus=2，认证通过，才能跳转到排班页面
+    window.location.href = '/hospital/schedule?hoscode=' + this.hoscode + "&depcode="+ depcode
+}
   }
 }
 </script>

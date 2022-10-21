@@ -1,34 +1,49 @@
-package com.hilda.yygh.user;
+package com.hilda.yygh.oss.controller.service.impl;
 
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
-import java.io.FileInputStream;
+import com.hilda.yygh.oss.controller.service.FileUploadService;
+import com.hilda.yygh.oss.utils.ConstantOssPropertiesUtils;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Service;
+
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.UUID;
 
-public class OssTest {
+@Service
+public class FileUploadServiceImpl implements FileUploadService {
 
-    public static void main(String[] args) throws Exception {
+    @Override
+    public String upload(String fileName, InputStream inputStream) {
+        String fileName1 = "";
+        try {
+            fileName1 = URLEncoder.encode(fileName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String id = UUID.randomUUID().toString().replace("-", "");
         // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-        String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
+        String endpoint = "https://" + ConstantOssPropertiesUtils.END_POINT;
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-        String accessKeyId = "LTAI5tC4QxiTAobiBhjeTeup";
-        String accessKeySecret = "5g7yjFDW39fXwtMM7d6lHGFgdXxPKM";
+        String accessKeyId = ConstantOssPropertiesUtils.ACCESS_KEY_ID;
+        String accessKeySecret = ConstantOssPropertiesUtils.ACCESS_KEY_SECRET;
         // 填写Bucket名称，例如examplebucket。
-        String bucketName = "shangyitong0526";
+        String bucketName = ConstantOssPropertiesUtils.BUCKET_NAME;
         // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
-        String objectName = "2022/10/20/" + UUID.randomUUID().toString().replace("-", "") + "0.png";
+        String dateString = new DateTime().toString("yyyy/MM/dd");
+        String objectName = dateString + "/" + id + fileName;
         // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
         // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
-        String filePath= "C:\\Users\\17597\\Pictures\\问号鹅头像.jpg";
+        String filePath= "D:\\localpath\\examplefile.txt";
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         try {
-            InputStream inputStream = new FileInputStream(filePath);
             // 创建PutObject请求。
             ossClient.putObject(bucketName, objectName, inputStream);
         } catch (OSSException oe) {
@@ -48,5 +63,8 @@ public class OssTest {
                 ossClient.shutdown();
             }
         }
+
+        return "https://" + ConstantOssPropertiesUtils.BUCKET_NAME + "." + ConstantOssPropertiesUtils.END_POINT + "/" + dateString + "/" + id + fileName1;
     }
+
 }

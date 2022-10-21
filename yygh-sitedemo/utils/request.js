@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
+//引入js-cookie
+import cookie from 'js-cookie'
 // 创建axios实例
 const service = axios.create({
         baseURL: 'http://localhost:8000',
@@ -16,19 +18,31 @@ service.interceptors.request.use(
         })
     // http response 拦截器
 service.interceptors.response.use(
-    response => {
-        if (response.data.code !== 20000) {
-            Message({
-                message: response.data.message,
-                type: 'error',
-                duration: 5 * 1000
-            })
-            return Promise.reject(response.data)
-        } else {
-            return response.data
+        response => {
+            if (response.data.code !== 20000) {
+                Message({
+                    message: response.data.message,
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+                return Promise.reject(response.data)
+            } else {
+                return response.data
+            }
+        },
+        error => {
+            return Promise.reject(error.response)
+        })
+    // http request 拦截器
+service.interceptors.request.use(
+    config => {
+        // token 先不处理，后续使用时在完善
+        if (cookie.get('token')) {
+            config.headers['token'] = cookie.get('token')
         }
+        return config
     },
-    error => {
-        return Promise.reject(error.response)
+    err => {
+        return Promise.reject(err)
     })
 export default service

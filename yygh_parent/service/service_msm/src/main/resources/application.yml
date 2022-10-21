@@ -19,8 +19,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: http://192.168.50.133:8848
+        server-addr: http://192.168.31.78:8848
 
   redis:
-    host: 192.168.50.133
+    host: 192.168.31.78
     port: 6379

@@ -1,15 +1,18 @@
 package com.hilda.yygh.user.controller;
 
 import com.hilda.common.result.R;
+import com.hilda.yygh.enums.AuthStatusEnum;
+import com.hilda.yygh.model.user.UserInfo;
 import com.hilda.yygh.user.service.UserInfoService;
+import com.hilda.yygh.user.utils.AuthContextHolder;
 import com.hilda.yygh.vo.user.LoginVo;
+import com.hilda.yygh.vo.user.UserAuthVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Api("用户接口")
 @RestController
@@ -27,6 +30,30 @@ public class UserInfoController {
         String code = loginVo.getCode();
 
         return R.ok().data(userInfoService.login(phone, code));
+    }
+
+    @ApiOperation("用户认证接口")
+    @PostMapping("/auth/userAuth")
+    public R userAuthenticate(@RequestBody UserAuthVo userAuthVo, HttpServletRequest request) {
+        // 查询 userId
+        Long userId = AuthContextHolder.getUserIdFromHttpRequest(request);
+
+        return userInfoService.authenticate(userId, userAuthVo) ? R.ok() : R.error().message("认证操作失败");
+    }
+
+    @ApiOperation("根据id查询用户信息")
+    @GetMapping("/auth/getUserInfo")
+    public R getUserInfoById(HttpServletRequest request) {
+        // 查询 userId
+        Long userId = AuthContextHolder.getUserIdFromHttpRequest(request);
+        // 根据userId查询用户信息
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(userId);
+
+        // 获取用户认证状态
+        Integer authStatus = userInfo.getAuthStatus();
+        userInfo.getParam().put("authStatusString", AuthStatusEnum.getStatusNameByStatus(authStatus));
+
+        return R.ok().data("userInfo", userInfo);
     }
 
 }

@@ -363,7 +363,7 @@ export default {
     phoneLogin() {
       this.dialogAtrr.showLoginType = "phone";
       this.showLogin();
-    },
+    }
   },
 };
 </script>

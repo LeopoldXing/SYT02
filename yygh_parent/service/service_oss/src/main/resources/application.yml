@@ -1,0 +1,25 @@
+server:
+  port: 8205
+
+spring:
+  application:
+    name: service-oss
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://192.168.31.78:8848
+
+aliyun:
+  oss:
+    file:
+      endpoint: oss-cn-hangzhou.aliyuncs.com
+      keyid: LTAI5tC4QxiTAobiBhjeTeup
+      keysecret: 5g7yjFDW39fXwtMM7d6lHGFgdXxPKM
+      bucketname: shangyitong0526
