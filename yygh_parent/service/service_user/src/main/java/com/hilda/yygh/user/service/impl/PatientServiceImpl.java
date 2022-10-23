@@ -1,6 +1,6 @@
 package com.hilda.yygh.user.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hilda.common.exception.YyghException;
 import com.hilda.yygh.cmn.client.DictFeignClient;
@@ -26,9 +26,9 @@ public class PatientServiceImpl extends ServiceImpl<PatientMapper, Patient> impl
     @Override
     public List<Patient> getPatientListByUserId(Long id) {
         // 查询
-        QueryWrapper<Patient> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", id);
-        List<Patient> patientList = patientMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<Patient> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Patient::getUserId, id);
+        List<Patient> patientList = patientMapper.selectList(lambdaQueryWrapper);
 
         // 查询字典值
         patientList.parallelStream().forEach(this::packPatient);

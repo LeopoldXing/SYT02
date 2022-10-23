@@ -23,9 +23,7 @@ public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, Hospi
 
     @Override
     public HospitalSet getHospitalSetById(Long id) {
-        if (id == null) {
-            return null;
-        }
+        if (id == null) return null;
         return hospitalSetMapper.selectById(id);
     }
 

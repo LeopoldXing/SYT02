@@ -38,7 +38,7 @@ public class UserInfoController {
         // 查询 userId
         Long userId = AuthContextHolder.getUserIdFromHttpRequest(request);
 
-        return userInfoService.authenticate(userId, userAuthVo) ? R.ok() : R.error().message("认证操作失败");
+        return userInfoService.applyForAuthentication(userId, userAuthVo) ? R.ok() : R.error().message("认证操作失败");
     }
 
     @ApiOperation("根据id查询用户信息")
